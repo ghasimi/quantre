@@ -1,15 +1,13 @@
-# rust-ify
+# quantre
 
-Selected functions and algorithms in [Rust](https://rust-lang.org/).
-
-Motivation: Learning via coding.
+Quant wheels reinvented in [Rust](https://rust-lang.org/).
 
 Test and documation (HTML):
 
 ```bash
-clone https://github.com/ghasimi/rust-ify
+clone https://github.com/ghasimi/quantre
 
-cd rust-ify/
+cd quantre/
 
 cargo test
 

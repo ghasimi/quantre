@@ -1,6 +1,8 @@
 [package]
-name = "rust-ify"
+name = "quantre"
 version = "0.1.0"
 edition = "2024"
+description = "Quant wheels reinvented in Rust."
+license = "MIT"
 
 [dependencies]
