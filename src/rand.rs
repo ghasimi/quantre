@@ -58,11 +58,14 @@ pub fn rand1() -> f64 {
 
 /// `n` pseudorandom integers from [a, b]
 pub fn randi(start: i64, end: i64, n: u64) -> Vec<i64> {
-    let min = cmp::min(start, end) as f64;
-    let max = cmp::max(start, end) as f64;
-    let length = max - min;
+    let min = cmp::min(start, end) as i64;
+    let max = cmp::max(start, end) as i64 + 1;
+    let length = (max - min) as f64;
     let r = rand(n);
-    return r.into_iter().map(|x| (min + length * x) as i64).collect();
+    return r
+        .into_iter()
+        .map(|x| min + (length * x).floor() as i64)
+        .collect();
 }
 
 /// `One` pseudorandom integer from [a, b]
@@ -73,6 +76,7 @@ pub fn randi1(start: i64, end: i64) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::HashSet;
 
     /// Check one pseudorandom number is between 0 (inclusive) and 1 (exlusive)
     #[test]
@@ -109,16 +113,16 @@ mod tests {
         assert!(er_var < 0.001);
     }
 
-    /// Check pseudorandom integers are between the start and end args
+    /// Check the set of pseudorandom integers contains every integer in [a, b], i.e. inclusive of a and b
     #[test]
     fn check_randi() {
-        let a = -10;
-        let b = 10;
-        let n = 10_000;
+        let a = -2;
+        let b = 3;
+        let n = 1000_000;
         let r = randi(a, b, n);
-        for i in 0..n {
-            assert!((a..=b).contains(&r[i as usize]));
-        }
+        let set_test: HashSet<i64> = r.iter().clone().into_iter().map(|x| *x).collect();
+        let set_true: HashSet<i64> = HashSet::from([-2, -1, 0, 1, 2, 3]);
+        assert_eq!(set_test, set_true);
     }
 
     /// Check one pseudorandom integer is between the start and end args
