@@ -7,10 +7,7 @@ use std::mem;
 const PI2: f64 = 2_f64 * PI;
 
 /// `n` pseudorandom numbers from N(μ=0, σ=1)
-///
-/// Using the [Box–Muller transform](https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform)
-///
-pub fn randn(n: u64) -> Vec<f64> {
+fn standard_randn(n: u64) -> Vec<f64> {
     let m = (n / 2 + 1) * 2;
     let u = rand(m);
     let mut r: Vec<f64> = Vec::new();
@@ -29,9 +26,18 @@ pub fn randn(n: u64) -> Vec<f64> {
     return r[..n as usize].to_vec();
 }
 
-/// `One` pseudorandom number from N(μ=0, σ=1)
-pub fn randn1() -> f64 {
-    return randn(1)[0];
+/// `n` pseudorandom numbers from N(μ, σ)
+///
+/// Using the [Box–Muller transform](https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform)
+///
+pub fn randn(n: u64, mu: f64, sigma: f64) -> Vec<f64> {
+    let r = standard_randn(n).iter().map(|z| z * sigma + mu).collect();
+    return r;
+}
+
+/// `One` pseudorandom number from N(μ, σ)
+pub fn randn1(mu: f64, sigma: f64) -> f64 {
+    return randn(1, mu, sigma)[0];
 }
 
 #[cfg(test)]
@@ -41,31 +47,40 @@ mod tests {
     /// Check μ=0 and σ=1 for the pseudorandom numbers from the Standard Noraml Dist.
     #[test]
     fn check_randn() {
+        let mu_true = -1.;
+        let sigma_true = 0.2;
         let n: u64 = 1000_000;
-        let r = randn(n);
-        let mut mu: f64 = 0.; // running mean
-        let mut ss: f64 = 0.; // runnin sum of squared
+        let r = randn(n, mu_true, sigma_true);
+
+        // mu (test)
+        let mut tot: f64 = 0.; // running total
         for x in &r {
-            let new_mu = (*x - mu) / n as f64;
-            ss = ss + (*x - mu) * (*x - new_mu);
-            mu = new_mu;
+            tot = tot + *x;
+        }
+        let mu: f64 = tot / n as f64;
+
+        // sigma (test)
+        let mut ss: f64 = 0.; // running sum of squared
+        for x in &r {
+            ss = ss + (*x - mu) * (*x - mu);
         }
         let var = ss / (n - 1) as f64;
+        let sigma = var.sqrt();
 
         // check size
         assert_eq!(n, r.len() as u64);
 
         // check mean
-        assert!((mu - 0.).abs() < 0.01);
+        assert!((mu - mu_true).abs() < 0.01);
 
-        // check variance
-        assert!((var - 1.).abs() < 0.01);
+        // check sigma
+        assert!((sigma - sigma_true).abs() < 0.01);
     }
 
     /// Check generation of a signle pseudorandom number from N(μ=0, σ=1)
     /// (Standard Noraml Dist.)
     #[test]
     fn check_randn1() {
-        let _: f64 = randn1();
+        let _: f64 = randn1(0., 1.);
     }
 }
