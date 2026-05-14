@@ -61,4 +61,14 @@ mod tests {
         let cdf_test: f64 = (standard_normal_cdf(z) * 1e6).round() / 1e6;
         assert_eq!(cdf_test, cdf_true);
     }
+
+    #[test]
+    fn check_cdf() {
+        let mu = -1.;
+        let sigma = 0.2;
+        let x: f64 = mu + 1.96 * sigma;
+        let cdf_true: f64 = (0.9750021048517795_f64 * 1e4 as f64).round() / 1e4; // Python (scipy)
+        let cdf_test: f64 = (cdf(x, mu, sigma) * 1e4).round() / 1e4;
+        assert_eq!(cdf_test, cdf_true);
+    }
 }
