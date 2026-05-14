@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "Quant wheels reinvented in Rust."
 license = "MIT"
+readme = "README.md"
 repository = "https://github.com/ghasimi/quantre"
 homepage = "https://ghasimi.github.io/quantre"
 keywords = ["quant", "quantitative", "numerical-methods"]
