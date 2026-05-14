@@ -18,7 +18,7 @@ fn rand_seed() -> u32 {
     return seed;
 }
 
-/// `n` pseudorandom numbers from [0, 1]
+/// `n` pseudorandom numbers from [0, 1)
 ///
 /// Using the Linear Congruential Generator (LCG)
 /// Lewis, Goodman, and Miller in 1969
@@ -43,14 +43,14 @@ pub fn rand(n: u64) -> Vec<f64> {
 
         // map to [0 1]
         // 1. shift the 31-bit by 16 => 15-bit left
-        // 2. max = 2^15 - 1 = 32,767
+        // 2. max = 2^15 = 32,768
         // 3. x / max to map to [0 1]
-        r.push((x >> 16) as f64 / 32767.0);
+        r.push((x >> 16) as f64 / 32768.0);
     }
     return r;
 }
 
-/// `One` pseudorandom number from [0, 1]
+/// `One` pseudorandom number from [0, 1)
 pub fn rand1() -> f64 {
     let r = rand(1);
     return r[0];
@@ -74,14 +74,14 @@ pub fn randi1(start: i64, end: i64) -> i64 {
 mod tests {
     use super::*;
 
-    /// Check one pseudorandom number is between 0 and 1
+    /// Check one pseudorandom number is between 0 (inclusive) and 1 (exlusive)
     #[test]
     fn check_rand1() {
-        let n = 10_000;
+        let n = 1000_000;
         for _ in 0..n {
             let r = rand1();
             assert!(r >= 0.);
-            assert!(r <= 1.);
+            assert!(r < 1.);
         }
     }
 
