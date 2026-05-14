@@ -57,7 +57,7 @@ pub fn rand1() -> f64 {
 }
 
 /// `n` pseudorandom integers from [a, b]
-pub fn randi(start: i64, end: i64, n: u64) -> Vec<i64> {
+pub fn randi(n: u64, start: i64, end: i64) -> Vec<i64> {
     let min = cmp::min(start, end) as i64;
     let max = cmp::max(start, end) as i64 + 1;
     let length = (max - min) as f64;
@@ -70,7 +70,7 @@ pub fn randi(start: i64, end: i64, n: u64) -> Vec<i64> {
 
 /// `One` pseudorandom integer from [a, b]
 pub fn randi1(start: i64, end: i64) -> i64 {
-    return randi(start, end, 1)[0];
+    return randi(1, start, end)[0];
 }
 
 #[cfg(test)]
@@ -116,10 +116,10 @@ mod tests {
     /// Check the set of pseudorandom integers contains every integer in [a, b], i.e. inclusive of a and b
     #[test]
     fn check_randi() {
+        let n = 1000_000;
         let a = -2;
         let b = 3;
-        let n = 1000_000;
-        let r = randi(a, b, n);
+        let r = randi(n, a, b);
         let set_test: HashSet<i64> = r.iter().clone().into_iter().map(|x| *x).collect();
         let set_true: HashSet<i64> = HashSet::from([-2, -1, 0, 1, 2, 3]);
         assert_eq!(set_test, set_true);
