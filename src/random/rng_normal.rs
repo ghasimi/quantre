@@ -1,6 +1,6 @@
 //! RNG from Noraml Distribution
 
-use super::rand;
+use super::rng_uniform::rand;
 use std::f64::consts::PI;
 use std::mem;
 
@@ -12,7 +12,7 @@ const PI2: f64 = 2_f64 * PI;
 ///
 pub fn randn(n: u64) -> Vec<f64> {
     let m = (n / 2 + 1) * 2;
-    let u = rand::rand(m);
+    let u = rand(m);
     let mut r: Vec<f64> = Vec::new();
     for pair in u.chunks(2) {
         let mut u1 = pair[0];
