@@ -1,7 +1,7 @@
 # quantre
 
-[crates.io](https://crates.io/crates/quantre) |
-[docs.rs](https:/docs.rs/quantre) |
+[crates.io](https://crates.io/crates/quantre) | 
+[docs.rs](https://docs.rs/quantre) |
 [github](https://github.com/ghasimi/quantre) |
 [home](https://ghasimi.github.io/quantre)
 
@@ -34,3 +34,7 @@ fn main() {
     println!("{}", normal::cdf(1.96, 0., 1.));
 }
 ```
+
+## Documentation
+
+[docs.rs/quantre](https://docs.rs/quantre)
