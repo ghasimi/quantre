@@ -14,13 +14,8 @@ pub fn pdf(x: f64, mu: f64, sigma: f64) -> f64 {
     return a * b.exp();
 }
 
-/// Cumulative Distribution Function (CDF) Approx. of Standard Normal Dist.
-///
-/// Source: SR. Bowling et al., 2009
-/// https://hdl.handle.net/10419/188388
-///
-/// F(z) ≈ 1 / (1 + e^(-0.07056 * z^3 - 1.5976 * z))
-///
+/// CDF of Standard Normal Dist.
+/// See the cdf() doc for details
 fn standard_normal_cdf(z: f64) -> f64 {
     let a: f64 = -0.07056 * z.powi(3);
     let b: f64 = -1.5976 * z;
@@ -28,6 +23,13 @@ fn standard_normal_cdf(z: f64) -> f64 {
 }
 
 /// Cumulative Distribution Function (CDF) Approx. of Normal Dist.
+///
+/// F(z) ≈ 1 / (1 + e^(-0.07056 * z^3 - 1.5976 * z))
+///
+/// where `z` is the z-score of `x` ∈ N(μ, σ)
+/// 
+/// Source: [SR. Bowling et al., 2009](https://hdl.handle.net/10419/188388)
+/// 
 pub fn cdf(x: f64, mu: f64, sigma: f64) -> f64 {
     let z: f64 = z_score(x, mu, sigma);
     return standard_normal_cdf(z);
