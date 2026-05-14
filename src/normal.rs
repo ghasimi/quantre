@@ -49,7 +49,7 @@ mod tests {
 
     #[test]
     fn check_pdf() {
-        let pdf_tue: f64 = 0.00876415; // numpy
+        let pdf_tue: f64 = 0.00876415; // Python (scipy)
         let pdf_test: f64 = (pdf(4., -1., 2.) * 1e8).round() / 1e8;
         assert_eq!(pdf_test, pdf_tue);
     }
@@ -57,7 +57,7 @@ mod tests {
     #[test]
     fn check_standard_normal_cdf() {
         let z: f64 = -1.5;
-        let cdf_true: f64 = 0.066948; // source approx. (vs numpy 0.066807)
+        let cdf_true: f64 = 0.066948; // source approx. (vs Python (scipy) 0.066807)
         let cdf_test: f64 = (standard_normal_cdf(z) * 1e6).round() / 1e6;
         assert_eq!(cdf_test, cdf_true);
     }
