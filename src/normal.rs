@@ -14,25 +14,28 @@ pub fn pdf(x: f64, mu: f64, sigma: f64) -> f64 {
     return a * b.exp();
 }
 
-/// CDF of Standard Normal Dist.
-/// See the cdf() doc for details
-fn standard_normal_cdf(z: f64) -> f64 {
-    let a: f64 = -0.07056 * z.powi(3);
-    let b: f64 = -1.5976 * z;
-    return 1_f64 / (1_f64 + (a + b).exp());
-}
-
 /// Cumulative Distribution Function (CDF) Approx. of Normal Dist.
 ///
-/// F(z) ≈ 1 / (1 + e^(-0.07056 * z^3 - 1.5976 * z))
-///
-/// where `z` is the z-score of `x` ∈ N(μ, σ)
+/// Φ(z) = 1 / (1 + e^(-y))
 /// 
-/// Source: [SR. Bowling et al., 2009](https://hdl.handle.net/10419/188388)
+/// where
+/// 
+/// `y` = 1.5957764 z + 0.0726161 z^3 + 0.00003318 z^6 −0.00021785 z^7 + 0.00006293 z^8 − 0.00000519 z^9
+/// 
+/// and `z` is the z-score of `x` = (x - mu) / sigma.
+/// 
+/// Reference: Eidous OM and Ananbeh EA. Approximations for cumulative distribution function of standard normal. J Stat Manage Syst 2022; 25: 541–547
+/// 
+/// Accessed via [Eidous, Omar & Rawwash, Mohammad. (2025)](https://www.researchgate.net/publication/389838151_Approximations_for_standard_normal_distribution_function_and_its_invertible). 
+/// Approximations for standard normal distribution function and its invertible. 19. 10.1177/174830262513221. 
+/// [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
 /// 
 pub fn cdf(x: f64, mu: f64, sigma: f64) -> f64 {
     let z: f64 = z_score(x, mu, sigma);
-    return standard_normal_cdf(z);
+    let y = 1.5957764 * z + 0.0726161 * z.powi(3) + 0.00003318 * z.powi(6) - 0.00021785 * z.powi(7)
+        + 0.00006293 * z.powi(8)
+        - 0.00000519 * z.powi(9);
+    return 1. / (1. + (-y).exp());
 }
 
 #[cfg(test)]
@@ -59,9 +62,9 @@ mod tests {
     #[test]
     fn check_standard_normal_cdf() {
         let z: f64 = -1.5;
-        let cdf_true: f64 = 0.066948; // source approx. (vs Python (scipy) 0.066807)
-        let cdf_test: f64 = (standard_normal_cdf(z) * 1e6).round() / 1e6;
-        assert_eq!(cdf_test, cdf_true);
+        let cdf_true: f64 = 0.066807; // Python (scipy)
+        let cdf_test: f64 = (cdf(z, 0., 1.) * 1e6).round() / 1e6;
+        assert!((cdf_test - cdf_true).abs() <= 1e-3);
     }
 
     #[test]
