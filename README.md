@@ -15,6 +15,8 @@ cargo add quantre
 
 ## Examples
 
+### Distributions
+
 ```rust
 // main.rs
 use quantre::random;
@@ -32,6 +34,37 @@ fn main() {
 
     // P(X <= 1.96), X ∈ N(0, 1)
     println!("{}", normal::cdf(1.96, 0., 1.));
+}
+```
+
+### Option Pricing
+
+```rust
+// main.rs
+use quantre::instrument::Option;
+use quantre::price;
+
+fn main() {
+
+	let option = Option {
+		underlying: 100.,
+		strike: 95.,
+		ttm: 1. / 12., 		// 1-month to maturity
+		vol: 0.35,			// volatility
+		quote_rate: 0.02, 	// risk free rate
+		base_rate: 0.03 	// dividend yield
+	};	
+
+    // Black-Scholes-Merton (BSM)
+    let (call, put) = price::bsm(option);
+
+	// Black 76 - Options on Futures
+	// let (call, put) = price::black(option);
+
+	// Garman-Kohlhagen - FX options
+	// let (call, put) = price::fx(option);
+
+    println!("{:.4} {:.4} ", call, put);
 }
 ```
 
